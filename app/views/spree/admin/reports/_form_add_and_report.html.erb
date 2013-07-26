@@ -1,9 +1,9 @@
 <script type="text/template" id="supplier_<%= supplier.id %>_email_template" class="supplier_email_template">
-<%= supplier.email_header %>
+<%= supplier.email_header && supplier.email_header != "" ? supplier.email_header : "Spoštovani,\n\nNaročamo naslednje izdelke:" %>
 {{#each products}}
-{{qty}}x {{{name}}} {{#if sku}}(SKU: {{sku}}){{/if}}{{/each}}
+{{qty}}x {{{name}}} {{#if sku && sku != ""}}(nensi: {{sku}}){{/if}}{{/each}}
 
-<%= supplier.email_footer -%>
+<%= supplier.email_footer && supplier.email_footer != "" ? supplier.email_footer : "Prosimo za potrditev in predviden čas dobave.\n\nHvala in lep dan še naprej,\n" -%>
 </script>
 
 <div class="add-line-item">

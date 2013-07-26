@@ -9,7 +9,7 @@
 
 
 - content_for :page_title do
-  Popis naročenih izdelkov
+  Naročeni izdelki po dobaviteljih
 
 - content_for :page_actions do
   - if false
@@ -46,7 +46,7 @@
 #suppliers_report
   %h2.suppliers_report_title
     Datum izpiska:
-    = Date.today
+    = l Date.today
 
   .suppliers_report_applied_filters
     - if @starting_order
@@ -88,8 +88,8 @@
           %tbody
             - product_pairs.each_pair do |pid, qty|
               - product = Spree::Product.find(pid)
-              %tr{:class => "#{cycle('odd', 'even')}"}
-                %td= product.name
+              %tr{:class => "#{cycle('odd', 'even')}#{ product.ad_hoc_option_types.empty? ? '' : ' ad_hoc' }"}
+                %td= (product.name  + ' (' + product.packaging + ') ' )
                 %td= product.sku
                 %td.quantity= qty
         - reset_cycle

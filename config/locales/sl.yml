@@ -1,0 +1,8 @@
+sl:
+  back_to_suppliers_list: "Nazaj na seznam dobaviteljev"
+  listing_suppliers: "Dobavitelji"
+  new_supplier: "Nov dobavitelj"
+  editing_supplier: "Urejanje dobavitelja"
+  supplier_name: "Ime dobavitelja"
+  supplier_email: "Email dobavitelja"
+  supplier_description: "Opis"
