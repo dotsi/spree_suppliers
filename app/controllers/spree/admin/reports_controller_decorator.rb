@@ -7,7 +7,7 @@ Spree::Admin::ReportsController.class_eval do
   def kludge_suppliers
     return if Spree::Admin::ReportsController::AVAILABLE_REPORTS.has_key?(:suppliers_orders)
     Spree::Admin::ReportsController::AVAILABLE_REPORTS.merge!({
-      :suppliers_orders => {:name => 'Suppliers Orders', :description => 'Ordered products by supplier'}
+      :suppliers_orders => {:name => 'Izdelki po dobaviteljih', :description => 'Naročeni izdelki po dobaviteljih in naročanje'}
       })
   end
 
