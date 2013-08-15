@@ -5,18 +5,18 @@ jQuery ->
 
   # Hooks used for changing existing records quantities
   $(document)
-    .on 'click', 'table.index td.quantity', ->
+    .on 'click', '#suppliers_report table.index td.quantity', ->
       if ($(this).children('input').size() == 0)
         field = input_field.clone()
         field.val($(this).html())
         $(this).html field
         $(this).find('input').focus()
-    .on 'blur', 'table.index td.quantity input', (el) ->
+    .on 'blur', '#suppliers_report table.index td.quantity input', (el) ->
       $(this).parent().html $(this).val()
 
   # Because we need to process returned data we use a custom hook
   # Since we only use it here it is not made as a jQuery plugin ($.fn.variantAutocomplete)
-  $(".variant_autocomplete").select2
+  $("#suppliers_report .variant_autocomplete").select2
     placeholder: "Select a variant"
     minimumInputLength: 4
     allowClear: true
@@ -34,20 +34,21 @@ jQuery ->
     # Text displayed in the select menu
     formatSelection: (product) ->
       $(@element).parents("fieldset").data
-        sku: product.sku
-        name: product.name
+        product:
+          sku: product.sku
+          name: product.name
       product.name
 
   # Handle clicks on "Add button"
   # Add variant name, sku and qty to the table
-  $('[data-hook="add_button"]').on "click", ->
+  $('#suppliers_report [data-hook="add_button"]').on "click", ->
     $fieldset = $(this).parents("fieldset")
-    sku = $fieldset.data("sku")
-    name = $fieldset.data("name")
-    qty = $fieldset.find('[data-hook="add_quantity"] input').val()
+    product = $fieldset.data("product")
 
     # If no product was chosen from dropdown sku will not exist and we shouldn't add anything
-    return false unless sku
+    return false unless product
+
+    product.qty = $fieldset.find('[data-hook="add_quantity"] input').val()
 
     # Hide email content if visible
     textarea = $(this).parents('.supplier_products_table').find('[data-hook="email_content"]')
@@ -55,19 +56,20 @@ jQuery ->
     textarea.slideUp() if textarea.is(':visible')
 
     $table = $(this).parents('.supplier_products_table').find('tbody')
-    $table.append(new_row_template({name: name, sku: sku, qty: qty}))
+    $table.append new_row_template(product)
 
     # Reset fields
-    $fieldset.data("sku", "").data("name", "").data("qty", 0)
-    $fieldset.find('.variant_autocomplete').select2('data', null)
+    $fieldset.find('input[type="hidden"].variant_autocomplete')
+      .data('product', null)
+      .select2('data', null)
 
     return false
 
-  $('[data-hook="send_button"]').on "click", ->
+  $('#suppliers_report [data-hook="send_button"]').on "click", ->
     window.report = new SuppliersEmailReport $(this).parents('.supplier_products_table')
     return false
 
-  $('[data-hook="send_email_button"]').on "click", ->
+  $('#suppliers_report [data-hook="send_email_button"]').on "click", ->
     content = $(this).siblings('textarea').val()
     encoded_content = encodeURIComponent(content)
 

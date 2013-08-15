@@ -21,12 +21,15 @@ Spree::Admin::ReportsController.class_eval do
     params[:q] = {} unless params[:q]
     params[:q][:meta_sort] = "number.asc"
     params[:q][:payment_state_in] = %w(balance_due paid)
+  
 
     # If Order Number is given find it and select products newer than the order
     if params[:q].has_key?(:order_number_gt) && !params[:q][:order_number_gt].blank?
       @starting_order = Spree::Order.where(number: params[:q][:order_number_gt]).first
       params[:q][:completed_at_gteq] = @starting_order.completed_at
       params[:q].delete(:order_number_gt)
+    elsif params[:q][:completed_at_gt].blank? && params[:q][:completed_at_lt].blank?
+      params[:q][:completed_at_gt] = Time.now - 1.day
     end
 
     @search = Spree::Order.ransack(params[:q])

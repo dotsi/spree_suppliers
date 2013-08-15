@@ -1,9 +1,3 @@
 # encoding: utf-8
-module Spree
-  module Admin
-    class SuppliersController < ResourceController
-      respond_to :html
-      
-    end
-  end
+class Spree::Admin::SuppliersController < Spree::Admin::ResourceController
 end
