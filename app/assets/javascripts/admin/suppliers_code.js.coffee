@@ -105,7 +105,8 @@ class SuppliersEmailReport
     product =
       name: $('<div/>').html(cells[0].innerHTML).text() # decode HTML to plaintext
       sku:  cells[1].innerHTML
-      qty:  cells[2].innerHTML
+      sku:  cells[2].innerHTML
+      qty:  cells[3].innerHTML
 
     @products.push product
 

@@ -4,10 +4,11 @@
 %script#suppliers-new-product-row{type: 'text/template'}
   %tr
     %td {{name}}
+    %td {{brand}}
     %td {{sku}}
     %td.quantity {{qty}}
 
-
+  
 - content_for :page_title do
   Naročeni izdelki po dobaviteljih
 
@@ -71,27 +72,30 @@
       = t(:no_results)
   - else
     - @product_quantities.each do |supplier_id, product_pairs|
-
+      = link_to_with_icon "icon-print", "tiskaj", "#", :class => "button print"
       = content_tag :div, class: 'supplier_products_table' do
         - supplier = Spree::Supplier.where(id: supplier_id).first
-        %h3.supplier_name= supplier.name
-        %table.index
-          %colgroup
-            %col{:style => ""}
-            %col{:style => "width: 10%;"}
-            %col{:style => "width: 10%;"}
-          %thead
-            %tr
-              %th Izdelek
-              %th Nensi
-              %th Količina
-          %tbody
-            - product_pairs.each_pair do |pid, qty|
-              - product = Spree::Product.find(pid)
-              %tr{:class => "#{cycle('odd', 'even')}#{ product.ad_hoc_option_types.empty? ? '' : ' ad_hoc' }"}
-                %td= (product.name  + ' (' + product.packaging + ') ' )
-                %td= product.sku
-                %td.quantity= qty
-        - reset_cycle
+        = content_tag :div, class: 'printable' do
+          %h3.supplier_name= supplier.name
+          %table.index
+            %colgroup
+              %col{:style => ""}
+              %col{:style => "width: 10%;"}
+              %col{:style => "width: 10%;"}
+            %thead
+              %tr
+                %th Izdelek
+                %th Proizvajalec
+                %th Nensi
+                %th Količina
+            %tbody
+              - product_pairs.each_pair do |pid, qty|
+                - product = Spree::Product.find(pid)
+                %tr{:class => "#{cycle('odd', 'even')}#{ product.ad_hoc_option_types.empty? ? '' : ' ad_hoc' }"}
+                  %td= (product.name  + ' (' + product.packaging + ') ' )
+                  %td= product.brand
+                  %td= product.sku
+                  %td.quantity= qty
+          - reset_cycle
 
         = render "form_add_and_report", supplier: supplier
