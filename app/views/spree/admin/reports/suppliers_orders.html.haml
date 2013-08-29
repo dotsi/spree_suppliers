@@ -76,7 +76,7 @@
       = content_tag :div, class: 'supplier_products_table' do
         - supplier = Spree::Supplier.where(id: supplier_id).first
         = content_tag :div, class: 'printable' do
-          %h3.supplier_name= supplier? supplier.name : ""
+          %h3.supplier_name= supplier ? supplier.name : "Brez - nujno izberi"
           %table.index
             %colgroup
               %col{:style => ""}
