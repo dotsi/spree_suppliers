@@ -92,9 +92,9 @@
               - product_pairs.each_pair do |pid, qty|
                 - product = Spree::Product.find(pid)
                 %tr{:class => "#{cycle('odd', 'even')}#{ product.ad_hoc_option_types.empty? ? '' : ' ad_hoc' }"}
-                  %td= (product.name  + ' (' + product.packaging + ') ' )
-                  %td= product.brand
-                  %td= product.sku
+                  %td= (product.name || ''  + ' (' + product.packaging || '' + ') ' )
+                  %td= product.brand || ''
+                  %td= product.sku || ''
                   %td.quantity= qty
           - reset_cycle
 
