@@ -49,15 +49,16 @@ Spree::Admin::ReportsController.class_eval do
       # Get product quantities
       order.line_items.each do |item|
         supplier = item.supplier ? item.supplier.id : nil # get Supplier ID through association
-
-        if @product_quantities.has_key? supplier
-          if @product_quantities[supplier].has_key? item.variant_id
-            @product_quantities[supplier][item.variant_id] += item.quantity
+        if supplier != nil
+          if @product_quantities.has_key? supplier
+            if @product_quantities[supplier].has_key? item.variant_id
+              @product_quantities[supplier][item.variant_id] += item.quantity
+            else
+              @product_quantities[supplier][item.variant_id] = item.quantity
+            end
           else
-            @product_quantities[supplier][item.variant_id] = item.quantity
+            @product_quantities[supplier] = { item.variant_id => item.quantity }
           end
-        else
-          @product_quantities[supplier] = { item.variant_id => item.quantity }
         end
       end
 
