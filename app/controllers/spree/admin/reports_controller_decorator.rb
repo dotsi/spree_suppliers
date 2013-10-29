@@ -26,10 +26,12 @@ Spree::Admin::ReportsController.class_eval do
     # If Order Number is given find it and select products newer than the order
     if params[:q].has_key?(:order_number_gt) && !params[:q][:order_number_gt].blank?
       @starting_order = Spree::Order.where(number: params[:q][:order_number_gt]).first
-      params[:q][:completed_at_gteq] = @starting_order.completed_at
+      params[:q][:completed_at_gt] = @starting_order.completed_at
       params[:q].delete(:order_number_gt)
     elsif params[:q][:completed_at_gt].blank? && params[:q][:completed_at_lt].blank?
-      params[:q][:completed_at_gt] = Time.now - 1.day
+      params[:q][:completed_at_gt] = Time.now# - 1.day
+    else
+      params[:q][:completed_at_gt] = Time.now
     end
 
     @search = Spree::Order.ransack(params[:q])
