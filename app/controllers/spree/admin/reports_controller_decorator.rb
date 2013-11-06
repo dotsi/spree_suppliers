@@ -20,7 +20,7 @@ Spree::Admin::ReportsController.class_eval do
     
     params[:q] = {} unless params[:q]
     params[:q][:meta_sort] = "number.asc"
-    params[:q][:payment_state_in] = %w(balance_due paid)
+    params[:q][:payment_state_in] = %w(balance_due paid credit_owed)
   
 
     # If Order Number is given find it and select products newer than the order
@@ -28,15 +28,17 @@ Spree::Admin::ReportsController.class_eval do
       @starting_order = Spree::Order.where(number: params[:q][:order_number_gt]).first
       params[:q][:completed_at_gt] = @starting_order.completed_at
       params[:q].delete(:order_number_gt)
-    elsif params[:q][:completed_at_gt].blank? && params[:q][:completed_at_lt].blank?
-      params[:q][:completed_at_gt] = Time.now# - 1.day
+      params[:q].delete(:completed_at_lt)
+    elsif !params[:q][:completed_at_gt].blank? #&& params[:q][:completed_at_lt].blank?
+      #params[:q][:completed_at_gt] = Time.now# - 1.day
     else
       params[:q][:completed_at_gt] = Time.now
     end
-
+    params[:q].delete(:order_number_gt)
+    logger.info params[:q]
     @search = Spree::Order.ransack(params[:q])
     @orders = @search.result(:uniq => true)
-
+    logger.info "St. narocil: " + @orders.size.to_s
     # Loop through scoped orders, get the suppliers and count products quantity for each
     # Idea for refactoring - make a service object
     #   @quantities = SupplierProductCounter.new @orders
